@@ -5,7 +5,7 @@ class zookeeper::params {
 	include java::params
 
 	$version = $::hostname ? {
-		default			=> "3.4.6",
+		default			=> "3.4.9",
 	}
 
  	$zookeeper_user = $::hostname ? {
@@ -13,11 +13,11 @@ class zookeeper::params {
 	}
  
  	$zookeeper_group = $::hostname ? {
-		default			=> "hadoop",
+		default			=> "zookeeper",
 	}
         
 	$servers = $::hostname ? {
-		default			=> ["vm1.openstacklocal", "vm2.openstacklocal", "vm3.openstacklocal", "vm4.openstacklocal"] 
+		default			=> ["zk1.fpa.rbxd.ds", "zk2.fpa.rbxd.ds", "zk3.fpa.rbxd.ds"] 
 	}
  
 	$java_home = $::hostname ? {
@@ -37,11 +37,11 @@ class zookeeper::params {
 	}             
 
  	$zookeeper_data_path = $::hostname ? {
-		default			=> "/var/zookeeper",
+		default			=> "/opt/zookeeper/zookeeper/data",
 	}
 
     $kerberos_mode = $::hostname ? {
-        default            => "yes",
+        default            => "no",
     }
 
     $keytab_path = $::hostname ? {
