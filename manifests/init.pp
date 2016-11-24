@@ -129,7 +129,7 @@ class zookeeper ($server_id) {
     }
  
     exec { "download ${zookeeper::params::zookeeper_base}/zookeeper-${zookeeper::params::version}.tar.gz":
-        command => "wget http://apache.cdpa.nsysu.edu.tw/zookeeper/zookeeper-${zookeeper::params::version}/zookeeper-${zookeeper::params::version}.tar.gz",
+        command => "wget http://apache.mirror.anlx.net/zookeeper/zookeeper-${zookeeper::params::version}/zookeeper-${zookeeper::params::version}.tar.gz",
         cwd => "${zookeeper::params::zookeeper_base}",
         alias => "download-zookeeper",
         user => "${zookeeper::params::zookeeper_user}",
