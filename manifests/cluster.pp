@@ -78,7 +78,7 @@ class zookeeper::cluster::kerberos {
     } 
 }
 
-class zookeeper::cluster ($server_id) {
+class zookeeper::cluster ($server_id, $server1_ip, $client_port) {
 
     require zookeeper::params
 
@@ -86,13 +86,24 @@ class zookeeper::cluster ($server_id) {
         server_id => $server_id,
     }
 
-    exec { "Launch zookeeper":
-        command => "./zkServer.sh start",
-        user => "${zookeeper::params::zookeeper_user}",
-        cwd => "${zookeeper::params::zookeeper_base}/zookeeper-${zookeeper::params::version}/bin",
-        path    => ["/bin", "/usr/bin", "${zookeeper::params::zookeeper_base}/zookeeper-${zookeeper::params::version}/bin", "${java::params::java_base}/jdk${java::params::java_version}/bin"],
-        require => [ File["zookeeper-myid"], File["zoo-cfg"] ],
-        unless  => "pgrep -f org.apache.zookeeper.server.quorum.QuorumPeerMain",
+    if $server_id == '1' {
+      exec { "Launch zookeeper":
+          command => "./zkServer.sh start",
+          user    => "${zookeeper::params::zookeeper_user}",
+          cwd     => "${zookeeper::params::zookeeper_base}/zookeeper-${zookeeper::params::version}/bin",
+          path    => ["/bin", "/usr/bin", "${zookeeper::params::zookeeper_base}/zookeeper-${zookeeper::params::version}/bin", "${java::params::java_base}/jdk${java::params::java_version}/bin"],
+          require => [ File["zookeeper-myid"], File["zoo-cfg"] ],
+          unless  => "pgrep -f org.apache.zookeeper.server.quorum.QuorumPeerMain",
+      }
+    }
+    else {
+      exec { "Launch zookeeper client":
+          command => "./zkCli.sh -server $server1_ip:$client_port",
+          user    => "${zookeeper::params::zookeeper_user}",
+          cwd     => "${zookeeper::params::zookeeper_base}/zookeeper-${zookeeper::params::version}/bin",
+          path    => ["/bin", "/usr/bin", "${zookeeper::params::zookeeper_base}/zookeeper-${zookeeper::params::version}/bin", "${java::params::java_base}/jdk${java::params::java_version}/bin"],
+          require => [ File["zookeeper-myid"], File["zoo-cfg"] ],
+
     }
  
 }
